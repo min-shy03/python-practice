@@ -1,35 +1,9 @@
 import tkinter as tk
 
 def calculator(iv):
-    operand_list = []
-    operator_list = []
+    iv = braket(iv)
 
-    operand = ""
-    operator = ""
-    count = 0
-
-    while '(' in iv:
-        for i, ch in enumerate(iv):
-            if ch == '(':
-                start = i
-            elif ch == ')':
-                end = i
-                break
-        result = calculator(iv[start+1:end])
-        iv = iv[:start] + str(result) + iv[end+1:]
-
-    for bar in iv:
-        count += 1
-        if bar.isdigit():
-            operand += bar
-            if operator != "":
-                operator_list.append(operator)
-            operator = ""
-        if not bar.isdigit() or count == len(iv):
-            operator += bar
-            if operand != "":
-                operand_list.append(int(operand))
-            operand = ""
+    operand_list, operator_list = ord_or_ort(iv)
 
     priority_operator = [["**"], ["*", "/", "%", "//"], ["+", "-"]]
 
@@ -66,6 +40,45 @@ def calculator(iv):
                 count += 1
 
     return operand_list[0]
+
+def ord_or_ort(iv) :
+    operand_list = []
+    operator_list = []
+    
+    operand = ""
+    operator = ""
+    
+    count = 0
+    for bar in iv:
+        count += 1
+        if bar.isdigit() or bar ==".":
+            operand += bar
+            if operator != "":
+                operator_list.append(operator)
+            operator = ""
+        if (not bar.isdigit() and bar != ".") or count == len(iv):
+            operator += bar
+            if operand != "":
+                if "." in operand :
+                    operand_list.append(float(operand))
+                else :
+                    operand_list.append(int(operand))
+            operand = ""
+    
+    return operand_list, operator_list
+
+def braket(iv) :
+    while '(' in iv:
+        for i, ch in enumerate(iv):
+            if ch == '(':
+                start = i
+            elif ch == ')':
+                end = i
+                break
+        result = calculator(iv[start+1:end])
+        iv = iv[:start] + str(result) + iv[end+1:]
+    
+    return iv 
 
 # tkinter 이용 GUI 구현 간단하게
 def cal() :
